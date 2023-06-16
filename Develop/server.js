@@ -1,15 +1,11 @@
 // import required modules and packages
 const express = require("express");
-const path = require("path");
-const fs = require("fs");
-const { v4: uuidv4 } = require('uuid');
-
-// setup express.js server
 const app = express();
-app.use(express.static("/Develop/public"));
+const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(express.static("public"));
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
 let notes = [];
 
 // define routes
@@ -86,6 +82,4 @@ app.delete("/api/notes/:id", function(req, res) {
         }
     });
 });
-
-const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
