@@ -6,81 +6,39 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+const apiRoutes = require("./routes/apiRoutes");
+const htmlRoutes = require("./routes/htmlRoutes");
 let notes = [];
+// setup express.js server
 
 // define routes
-// get route for home page
-app.get("/public", function(req, res) {
-    // return index.html
-    res.sendFile(path.join(__dirname, "index.html"), err => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log("Success!");
-        }
-    });
-});
+    
+    // get route for home page
+       // return index.html
 
-// get route for notes page
-app.get("/notes", function(req, res) {
-    //return the notes.html file
-    res.sendFile(path.join(__dirname,"notes.html"), err => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log("Success!");
-        }
-    });
-});
+    // get route for notes page
+         // return notes.html
 
-// get route to retrieve all saved notes
-app.get("/api/notes", function(req, res) {
-    // read db.json file and return all saved notes as json
-    fs.readFile("db.json", "utf8", function(err, data) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log("Success!");
-            res.json(JSON.parse(data));
-        }
-    });
-});
+    // get route to retrieve all saved notes
+        // read db.json file
+        // return all saved notes as json
 
-// post route to add new saved notes
-app.post("/api/notes", function(req, res) {
-    var newNote = req.body;
-    newNote.id = uuidv4(); // assign a unique id
+    // post route to add new saved notes
+        // read db.json file
+        // parse the request body to get the new note data
+        // assign a unique id
+        // push this new note to the array of saved notes
+        // write the updated array of notes the db.json file
+        // return the new note to the client
 
-    // push this new note to the array of saved notes
-    notes.push(newNote);
+    // delete route to remove a saved note based on id
+        // read db.json file
+        // get the id of the note to be able to remove
+        // find the note with the corresponding id in the array
+        // remove the note from the array
+        // write the updated array of notes with the deleted missing
 
-    // write the updated array of notes the db.json file
-    fs.writeFile("db.json", JSON.stringify(notes), (err) => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log("Success!");
-            res.json(newNote); // return the new note to the client
-        }
-    });
-});
+// use the helper folder for your uuid and utils
 
-// delete route to remove a saved note based on id
-app.delete("/api/notes/:id", function(req, res) {
-    // read db.json file
-    const noteId = req.params.id;
 
-    notes = notes.filter((note) => note.id !== noteId); // remove the note from the array
 
-    // write the updated array of notes with the deleted missing
-    fs.writeFile("db.json", JSON.stringify(notes), (err) => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log("Success!");
-            res.json({ ok: true }); // return success status
-        }
-    });
-});
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
-// small change
