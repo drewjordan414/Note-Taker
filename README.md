@@ -54,9 +54,7 @@ The Note-Taking Application is built using the following technologies:
 
 ## Acknowledgements
 
-- The Note-Taking Application is based on the user story provided by [User Story XYZ](https://userstoryxyz.com).
-- Special thanks to the developers and contributors of the libraries and frameworks used in this project.
-
+- Starter code https://github.com/coding-boot-camp/miniature-eureka
 ## License
 
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
