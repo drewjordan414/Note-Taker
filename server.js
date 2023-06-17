@@ -1,5 +1,7 @@
 // import required modules and packages
 const express = require("express");
+const fs = require("fs");
+const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3001;
 // setup express.js server
@@ -76,7 +78,5 @@ app.delete("/api/notes/:id", (req, res) => {
     });
 });
 
-// START SERVER
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
 
 
