@@ -1,44 +1,82 @@
 // import required modules and packages
 const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
+// setup express.js server
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
-const apiRoutes = require("./routes/apiRoutes");
-const htmlRoutes = require("./routes/htmlRoutes");
-let notes = [];
-// setup express.js server
-
 // define routes
+app.get("/index", (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/index.html"));
+});
+
+app.get("/notes", (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/notes.html"));
+});
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/notes.html"));
+});
+
+// If no matching route is found default to index
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/index.html"));
+});
+
+// API ROUTES
+app.get("/api/notes", (req, res) => {
+    fs.readFile('./db/db.json', 'utf8', (error, file) => {
+        if (error) throw error;
+        const parsedFile = JSON.parse(file);
+        return res.send(parsedFile);
+    });
+});
+
+app.post("/api/notes", (req, res) => {
+    let note = req.body;
+    note["id"] = Date.now();
+    note["title"] = req.body.title;
+    note["text"] = req.body.text;
+
+    fs.readFile('./db/db.json', 'utf8', (error, file) => {
+        if (error) throw error;
+
+        const parsedFile = JSON.parse(file);
+        parsedFile.push(note);
+
+        const newStringifiedFile = JSON.stringify(parsedFile);
     
-    // get route for home page
-       // return index.html
+        fs.writeFile('./db/db.json', newStringifiedFile, 'utf8', (err) => {
+            if (err) throw err;
+            console.log("The new note was appended to the file!");
+        });
 
-    // get route for notes page
-         // return notes.html
+        return res.send(JSON.parse(newStringifiedFile));
+    });    
+});
 
-    // get route to retrieve all saved notes
-        // read db.json file
-        // return all saved notes as json
+app.delete("/api/notes/:id", (req, res) => {
+    fs.readFile('./db/db.json', 'utf8', (error, file) => {
+        if (error) throw error;
 
-    // post route to add new saved notes
-        // read db.json file
-        // parse the request body to get the new note data
-        // assign a unique id
-        // push this new note to the array of saved notes
-        // write the updated array of notes the db.json file
-        // return the new note to the client
+        let deletedNoteId = req.params.id;
+        const parsedFile = JSON.parse(file);
+        const newParsedFile = parsedFile.filter(elem => elem.id != deletedNoteId);
 
-    // delete route to remove a saved note based on id
-        // read db.json file
-        // get the id of the note to be able to remove
-        // find the note with the corresponding id in the array
-        // remove the note from the array
-        // write the updated array of notes with the deleted missing
+        const newStringifiedFile = JSON.stringify(newParsedFile);
 
-// use the helper folder for your uuid and utils
+        fs.writeFile('./db/db.json', newStringifiedFile, 'utf8', (err) => {
+            if (err) throw err;
+            console.log("The note was deleted!");
+        });
 
+        return res.send(JSON.parse(newStringifiedFile));
+    });
+});
+
+// START SERVER
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
 
 
