@@ -11,20 +11,20 @@ app.use(express.static("public"));
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
 // define routes
 app.get("/index", (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/index.html"));
+    res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
 app.get("/notes", (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/notes.html"));
+    res.sendFile(path.join(__dirname, "/public/notes.html"));
 });
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/notes.html"));
+    res.sendFile(path.join(__dirname, "/public/notes.html"));
 });
 
 // If no matching route is found default to index
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/index.html"));
+    res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
 // API ROUTES
