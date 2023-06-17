@@ -2,13 +2,16 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const { v4: uuidv4 } = require('uuid');
 const app = express();
 const PORT = process.env.PORT || 3001;
+
 // setup express.js server
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+
 // define routes
 app.get("/index", (req, res) => {
     res.sendFile(path.join(__dirname, "/public/index.html"));
@@ -19,11 +22,6 @@ app.get("/notes", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "/public/notes.html"));
-});
-
-// If no matching route is found default to index
-app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
@@ -38,7 +36,7 @@ app.get("/api/notes", (req, res) => {
 
 app.post("/api/notes", (req, res) => {
     let note = req.body;
-    note["id"] = Date.now();
+    note["id"] = uuidv4(); // using uuidv4 for unique id
     note["title"] = req.body.title;
     note["text"] = req.body.text;
 
@@ -78,5 +76,7 @@ app.delete("/api/notes/:id", (req, res) => {
     });
 });
 
-
-
+// If no matching route is found default to index
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/index.html"));
+});
